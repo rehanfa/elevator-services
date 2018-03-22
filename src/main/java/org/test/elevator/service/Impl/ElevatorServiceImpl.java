@@ -14,48 +14,47 @@ import org.test.elevator.service.ElevatorService;
 @Component
 public class ElevatorServiceImpl implements ElevatorService {
 
-	@Autowired
-	private SimpMessagingTemplate template;
+    @Autowired
+    private SimpMessagingTemplate template;
 
-	static {
+    static {
 
-		ElevatorFactory.getElevatorFacade(1, new ElevatorCallbackImpl());
-		ElevatorFactory.getElevatorFacade(2, new ElevatorCallbackImpl());
-	}
+        ElevatorFactory.getElevatorFacade(1, new ElevatorCallbackImpl());
+        ElevatorFactory.getElevatorFacade(2, new ElevatorCallbackImpl());
+    }
 
-	/**
-	 * Moves the evlevator to requested floor number.
-	 *
-	 * @param elevatorId the elevator number
-	 * @oaram floorParam the floor number
-	 * @return
-	 */
+    /**
+     * Moves the evlevator to requested floor number.
+     *
+     * @param elevatorId the elevator number
+     * @return
+     * @oaram floorParam the floor number
+     */
 
-	public void moveToCurrentFloor(int elevatorId, int floorParam) throws StatusMessageException {
-		if (elevatorId !=1 && elevatorId != 2){
-			throw new IllegalArgumentException("Invalid elevator id");
-		}
-		else if (floorParam < 1 || floorParam > 6){
-			throw new IllegalArgumentException("Invalid floor number");
-		}
-		ElevatorFacade elevatorFacade = ElevatorFactory.getElevatorFacade(elevatorId, null);
-		elevatorFacade.unlockBreaks();
-		int currentFloor = elevatorFacade.getCurrentFloor() ;
-		int initialFloor = elevatorFacade.getCurrentFloor() ;
-		if(currentFloor != floorParam) {
-		    this.sendStatus("Elevator "+ elevatorId + " got request to move to " + floorParam + " from floor " + currentFloor);
-		    if(currentFloor < floorParam) {
-			    moveElevator(elevatorId, floorParam, elevatorFacade, true);
+    public void moveToCurrentFloor(int elevatorId, int floorParam) throws StatusMessageException {
+        if (elevatorId != 1 && elevatorId != 2) {
+            throw new IllegalArgumentException("Invalid elevator id");
+        } else if (floorParam < 1 || floorParam > 6) {
+            throw new IllegalArgumentException("Invalid floor number");
+        }
+        ElevatorFacade elevatorFacade = ElevatorFactory.getElevatorFacade(elevatorId, null);
+        elevatorFacade.unlockBreaks();
+        int currentFloor = elevatorFacade.getCurrentFloor();
+        int initialFloor = elevatorFacade.getCurrentFloor();
+        if (currentFloor != floorParam) {
+            this.sendStatus("Elevator " + elevatorId + " got request to move to " + floorParam + " from floor " + currentFloor);
+            if (currentFloor < floorParam) {
+                moveElevator(elevatorId, floorParam, elevatorFacade, true);
             } else if (currentFloor > floorParam) {
-				while(floorParam != elevatorFacade.getCurrentFloor()) {
-				    moveElevator(elevatorId, floorParam, elevatorFacade, false);
-				}
-			}
+                while (floorParam != elevatorFacade.getCurrentFloor()) {
+                    moveElevator(elevatorId, floorParam, elevatorFacade, false);
+                }
+            }
 
-			this.sendStatus("Elevator "+ elevatorId + " reached to floor " + floorParam + " from floor " + initialFloor);
+            this.sendStatus("Elevator " + elevatorId + " reached to floor " + floorParam + " from floor " + initialFloor);
 
-		}
-	}
+        }
+    }
 
 
     /**
@@ -64,55 +63,55 @@ public class ElevatorServiceImpl implements ElevatorService {
 
     private void moveElevator(int elevatorId, int floorParam, ElevatorFacade elevatorFacade, boolean upwards) throws StatusMessageException {
         int currentFloor;
-        while(floorParam != elevatorFacade.getCurrentFloor()) {
+        while (floorParam != elevatorFacade.getCurrentFloor()) {
             currentFloor = elevatorFacade.getCurrentFloor();
-            if(upwards) {
+            if (upwards) {
                 elevatorFacade.moveUpOneFloor();
                 this.sendStatus("Elevator " + elevatorId + " moved to floor " + (currentFloor + 1) + " from floor " + currentFloor);
             } else {
                 elevatorFacade.moveDownOneFloor();
-                this.sendStatus("Elevator "+ elevatorId + " moved to floor " + (currentFloor - 1) + " from floor " + currentFloor);
+                this.sendStatus("Elevator " + elevatorId + " moved to floor " + (currentFloor - 1) + " from floor " + currentFloor);
             }
         }
     }
 
     /**
-	 * Locks the elevator breaks, to prevent it from moving.
-	 *
-	 * @param elevatorId the elevator number
-	 * @return
-	 */
-	public void stopElevator(int elevatorId) {
-		if (elevatorId !=1 && elevatorId != 2){
-			throw new IllegalArgumentException("Invalid elevator id");
-		}
-		ElevatorFacade elevatorFacade = ElevatorFactory.getElevatorFacade(elevatorId, null);
-		elevatorFacade.lockBreaks();
-	}
+     * Locks the elevator breaks, to prevent it from moving.
+     *
+     * @param elevatorId the elevator number
+     * @return
+     */
+    public void stopElevator(int elevatorId) {
+        if (elevatorId != 1 && elevatorId != 2) {
+            throw new IllegalArgumentException("Invalid elevator id");
+        }
+        ElevatorFacade elevatorFacade = ElevatorFactory.getElevatorFacade(elevatorId, null);
+        elevatorFacade.lockBreaks();
+    }
 
-	/**
-	 * Sends message to the status topic
-	 *
-	 * @param message message to be consumed
-	 * @return
-	 */
-	public Status sendStatus(String message) throws StatusMessageException{
-		Status retVal = null;
-		try {
-			retVal = new Status(message);
-			this.getTemplate().convertAndSend("/topic/status", retVal);
-			return retVal;
-		}catch (Exception e) {
-			throw new StatusMessageException("Unable to send status message", e);
-		}
+    /**
+     * Sends message to the status topic
+     *
+     * @param message message to be consumed
+     * @return
+     */
+    public Status sendStatus(String message) throws StatusMessageException {
+        Status retVal = null;
+        try {
+            retVal = new Status(message);
+            this.getTemplate().convertAndSend("/topic/status", retVal);
+            return retVal;
+        } catch (Exception e) {
+            throw new StatusMessageException("Unable to send status message", e);
+        }
 
-	}
+    }
 
-	public SimpMessagingTemplate getTemplate() {
-		return template;
-	}
+    public SimpMessagingTemplate getTemplate() {
+        return template;
+    }
 
-	public void setTemplate(SimpMessagingTemplate template) {
-		this.template = template;
-	}
+    public void setTemplate(SimpMessagingTemplate template) {
+        this.template = template;
+    }
 }
