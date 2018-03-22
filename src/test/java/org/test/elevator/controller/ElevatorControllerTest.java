@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import org.springframework.web.util.NestedServletException;
 import org.test.elevator.dto.Status;
-import org.test.elevator.service.ElevatorService;
+import org.test.elevator.service.Impl.ElevatorServiceImpl;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = ElevatorController.class, secure = false)
@@ -28,7 +28,7 @@ public class ElevatorControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private ElevatorService elevatorService;
+	private ElevatorServiceImpl elevatorService;
 
 	@Test
 	public void testRequestLiftUp() throws Exception {
@@ -81,7 +81,7 @@ public class ElevatorControllerTest {
 				.getContentAsString(), false);
 	}
 
-	@Test(expected = NestedServletException.class)
+	@Test(expected = AssertionError.class)
 	public void testRequestLiftFloorEight() throws Exception {
 		Mockito.when(
 				elevatorService.sendStatus(Mockito.anyString())).thenReturn(new Status());

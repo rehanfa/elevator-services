@@ -1,16 +1,17 @@
-package org.test.elevator.service;
+package org.test.elevator.service.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import org.test.elevator.Exception.StatusMessageException;
 import org.test.elevator.api.ElevatorFacade;
 import org.test.elevator.api.ElevatorFactory;
 import org.test.elevator.api.impl.ElevatorCallbackImpl;
 import org.test.elevator.dto.Status;
 
 @Component
-public class ElevatorService {
+public class ElevatorServiceImpl implements ElevatorService{
 
 	@Autowired
 	private SimpMessagingTemplate template;
@@ -29,7 +30,7 @@ public class ElevatorService {
 	 * @return
 	 */
 
-	public void moveToCurrentFloor(int elevatorId, int floorParam){
+	public void moveToCurrentFloor(int elevatorId, int floorParam) throws StatusMessageException {
 		if (elevatorId !=1 && elevatorId != 2){
 			throw new IllegalArgumentException("Invalid elevator id");
 		}
@@ -41,38 +42,23 @@ public class ElevatorService {
 		int currentFloor = elevatorFacade.getCurrentFloor() ;
 		int initialFloor = elevatorFacade.getCurrentFloor() ;
 		if(currentFloor != floorParam) {
-			try {
-				this.sendStatus("Elevator "+ elevatorId + " got request to move to " + floorParam + " from floor " + currentFloor);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.sendStatus("Elevator "+ elevatorId + " got request to move to " + floorParam + " from floor " + currentFloor);
 			if(currentFloor < floorParam) {
 				while(floorParam != elevatorFacade.getCurrentFloor()) {
 					currentFloor = elevatorFacade.getCurrentFloor();
 					elevatorFacade.moveUpOneFloor();
-					try {
-						this.sendStatus("Elevator "+ elevatorId + " moved to floor " + (currentFloor + 1) + " from floor " + currentFloor);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					this.sendStatus("Elevator "+ elevatorId + " moved to floor " + (currentFloor + 1) + " from floor " + currentFloor);
 				}
 			} else if (currentFloor > floorParam) {
 				while(floorParam != elevatorFacade.getCurrentFloor()) {
 					currentFloor = elevatorFacade.getCurrentFloor();
 					elevatorFacade.moveDownOneFloor();
-					try {
-						this.sendStatus("Elevator "+ elevatorId + " moved to floor " + (currentFloor - 1) + " from floor " + currentFloor);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					this.sendStatus("Elevator "+ elevatorId + " moved to floor " + (currentFloor - 1) + " from floor " + currentFloor);
 				}
 			}
 
-			try {
-				this.sendStatus("Elevator "+ elevatorId + " reached to floor " + floorParam + " from floor " + initialFloor);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.sendStatus("Elevator "+ elevatorId + " reached to floor " + floorParam + " from floor " + initialFloor);
+
 		}
 	}
 
@@ -96,10 +82,16 @@ public class ElevatorService {
 	 * @param message message to be consumed
 	 * @return
 	 */
-	public Status sendStatus(String message) {
-		Status retVal = new Status(message);
-		this.getTemplate().convertAndSend("/topic/status", retVal);
-		return retVal;
+	public Status sendStatus(String message) throws StatusMessageException{
+		Status retVal = null;
+		try {
+			retVal = new Status(message);
+			this.getTemplate().convertAndSend("/topic/status", retVal);
+			return retVal;
+		}catch (Exception e) {
+			throw new StatusMessageException("Unable to send status message", e);
+		}
+
 	}
 
 	public SimpMessagingTemplate getTemplate() {
