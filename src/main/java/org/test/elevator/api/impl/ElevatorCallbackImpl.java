@@ -3,7 +3,7 @@ package org.test.elevator.api.impl;
 import org.test.elevator.api.ElevatorCallback;
 
 public class ElevatorCallbackImpl implements ElevatorCallback {
-    private int currentFloor;
+    private int currentFloor = 1;
 
     /**
      * Notifies that an elevator arrived on a specific floor.

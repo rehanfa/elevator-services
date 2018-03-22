@@ -8,7 +8,7 @@ package org.test.elevator.api;
 public class ElevatorFacadeStub implements ElevatorFacade {
 	
 	private boolean breaksOn = false;
-	private int currentFloor = 0;
+	private int currentFloor = 1;
 	private final ElevatorCallback callback;
 	private int elevatorId;
 

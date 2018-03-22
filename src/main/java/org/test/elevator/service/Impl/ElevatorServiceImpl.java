@@ -45,16 +45,10 @@ public class ElevatorServiceImpl implements ElevatorService {
 		if(currentFloor != floorParam) {
 			this.sendStatus("Elevator "+ elevatorId + " got request to move to " + floorParam + " from floor " + currentFloor);
 			if(currentFloor < floorParam) {
+                moveElevator(elevatorId, floorParam, elevatorFacade, true);
+            } else if (currentFloor > floorParam) {
 				while(floorParam != elevatorFacade.getCurrentFloor()) {
-					currentFloor = elevatorFacade.getCurrentFloor();
-					elevatorFacade.moveUpOneFloor();
-					this.sendStatus("Elevator "+ elevatorId + " moved to floor " + (currentFloor + 1) + " from floor " + currentFloor);
-				}
-			} else if (currentFloor > floorParam) {
-				while(floorParam != elevatorFacade.getCurrentFloor()) {
-					currentFloor = elevatorFacade.getCurrentFloor();
-					elevatorFacade.moveDownOneFloor();
-					this.sendStatus("Elevator "+ elevatorId + " moved to floor " + (currentFloor - 1) + " from floor " + currentFloor);
+                    moveElevator(elevatorId, floorParam, elevatorFacade, false);
 				}
 			}
 
@@ -63,7 +57,26 @@ public class ElevatorServiceImpl implements ElevatorService {
 		}
 	}
 
-	/**
+
+    /**
+     * Moves the evlevator to requested floor number.
+     */
+
+    private void moveElevator(int elevatorId, int floorParam, ElevatorFacade elevatorFacade, boolean upwards) throws StatusMessageException {
+        int currentFloor;
+        while(floorParam != elevatorFacade.getCurrentFloor()) {
+            currentFloor = elevatorFacade.getCurrentFloor();
+            if(upwards) {
+                elevatorFacade.moveUpOneFloor();
+                this.sendStatus("Elevator " + elevatorId + " moved to floor " + (currentFloor + 1) + " from floor " + currentFloor);
+            } else {
+                elevatorFacade.moveDownOneFloor();
+                this.sendStatus("Elevator "+ elevatorId + " moved to floor " + (currentFloor - 1) + " from floor " + currentFloor);
+            }
+        }
+    }
+
+    /**
 	 * Locks the elevator breaks, to prevent it from moving.
 	 *
 	 * @param elevatorId the elevator number
