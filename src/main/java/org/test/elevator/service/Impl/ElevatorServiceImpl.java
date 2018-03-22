@@ -43,12 +43,12 @@ public class ElevatorServiceImpl implements ElevatorService {
 		int currentFloor = elevatorFacade.getCurrentFloor() ;
 		int initialFloor = elevatorFacade.getCurrentFloor() ;
 		if(currentFloor != floorParam) {
-			this.sendStatus("Elevator "+ elevatorId + " got request to move to " + floorParam + " from floor " + currentFloor);
-			if(currentFloor < floorParam) {
-                moveElevator(elevatorId, floorParam, elevatorFacade, true);
+		    this.sendStatus("Elevator "+ elevatorId + " got request to move to " + floorParam + " from floor " + currentFloor);
+		    if(currentFloor < floorParam) {
+			    moveElevator(elevatorId, floorParam, elevatorFacade, true);
             } else if (currentFloor > floorParam) {
 				while(floorParam != elevatorFacade.getCurrentFloor()) {
-                    moveElevator(elevatorId, floorParam, elevatorFacade, false);
+				    moveElevator(elevatorId, floorParam, elevatorFacade, false);
 				}
 			}
 
