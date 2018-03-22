@@ -13,7 +13,7 @@ Spring Boot is used to develop this simple elevator monitoring system. RESTful w
 - mvn clean package, and deploy to tomcat.
 
 ### Accessing Application
-- index.html is a entry point to view the status of elevators.
+- index.html is an entry point to view the status of elevators.
 - There are two rest method
   - @GetMapping("/elevator/{id}/{floor}")
     - This method is used to 
