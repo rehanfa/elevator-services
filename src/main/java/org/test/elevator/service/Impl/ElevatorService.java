@@ -1,6 +1,6 @@
 package org.test.elevator.service.Impl;
 
-import org.test.elevator.Exception.StatusMessageException;
+import org.test.elevator.exception.StatusMessageException;
 
 public interface ElevatorService {
     /**

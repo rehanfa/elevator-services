@@ -1,4 +1,4 @@
-package org.test.elevator.Exception;
+package org.test.elevator.exception;
 
 public class StatusMessageException extends Exception{
 

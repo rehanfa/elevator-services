@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.test.elevator.Exception.StatusMessageException;
+import org.test.elevator.exception.StatusMessageException;
 import org.test.elevator.dto.Status;
 import org.test.elevator.service.Impl.ElevatorServiceImpl;
 

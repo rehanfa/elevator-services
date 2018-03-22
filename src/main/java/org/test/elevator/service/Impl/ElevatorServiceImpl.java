@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import org.test.elevator.Exception.StatusMessageException;
+import org.test.elevator.exception.StatusMessageException;
 import org.test.elevator.api.ElevatorFacade;
 import org.test.elevator.api.ElevatorFactory;
 import org.test.elevator.api.impl.ElevatorCallbackImpl;
