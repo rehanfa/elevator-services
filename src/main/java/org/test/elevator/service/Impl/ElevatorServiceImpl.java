@@ -9,9 +9,10 @@ import org.test.elevator.api.ElevatorFacade;
 import org.test.elevator.api.ElevatorFactory;
 import org.test.elevator.api.impl.ElevatorCallbackImpl;
 import org.test.elevator.dto.Status;
+import org.test.elevator.service.ElevatorService;
 
 @Component
-public class ElevatorServiceImpl implements ElevatorService{
+public class ElevatorServiceImpl implements ElevatorService {
 
 	@Autowired
 	private SimpMessagingTemplate template;

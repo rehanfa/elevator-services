@@ -1,4 +1,4 @@
-package org.test.elevator.service.Impl;
+package org.test.elevator.service;
 
 import org.test.elevator.exception.StatusMessageException;
 
