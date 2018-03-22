@@ -16,6 +16,12 @@ Spring Boot is used to develop this simple elevator monitoring system. RESTful w
 - index.html is a entry point to view the status of elevators.
 - There are two rest method
   - @GetMapping("/elevator/{id}/{floor}")
-    -This method is used to call up, down, or move lift to particular floor between 1 to 6
+    -This method is used to 
+      -call up
+        For example lift is at floor 1 and passenger is at floor 4, then call will be /elevator/1/4 for elevator id 1
+      -down
+        For example lift is at floor 4 and passenger is at floor 2, then call will be /elevator/1/2 for elevator id 1
+      -move lift to particular floor between 1 to 6
+        For example lift is at floor 4 and passenger wanrs to go to floor 2, then call will be /elevator/1/2 for elevator id 1
   - @GetMapping("/elevator/stop/{id}")
     -This method is used to stop elevator, that prevents further movement of lift
