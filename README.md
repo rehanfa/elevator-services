@@ -1,7 +1,7 @@
 # elevator-services
 
 ## Design
-Spring Boot is used to develop this simple elevator monitoring system. RESTful webservices are used to integrate with multiple interfaces easily. WebSocket is used to push elevator movement, so it can be moniroted without refreshing the client. This sytem is developed without any licensing cost involved.
+Spring Boot is used to develop this simple elevator monitoring system. RESTful webservices are used to integrate with multiple interfaces easily. WebSocket is used to push elevator movement, so it can be monitored without refreshing the client. This sytem is developed without any licensing cost involved. It can be deployed to tomcat by generating war file using mvn clean package command.
 
 ### Prerequisites
 - Java 8
